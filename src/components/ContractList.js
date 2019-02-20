@@ -1,32 +1,43 @@
 import React, { Component } from 'react';
+import ESI from '../ESI';
 import Contract from './Contract';
 import './ContractList.css';
 
 class ContractList extends Component {
   constructor() {
     super();
+    this.state = {
+      contracts: []
+    };
+  }
+
+  async componentDidMount() {
+    let contracts = await ESI.getContracts(this.props.regionId, 1 /* TODO */);
+    this.setState({ 
+      contracts: contracts
+    });
   }
 
   render() {
-    let details = {
-      "collateral": 0,
-      "contract_id": 141731750,
-      "date_expired": "2019-02-20T20:41:08Z",
-      "date_issued": "2019-01-23T20:41:08Z",
-      "days_to_complete": 0,
-      "end_location_id": 60012301,
-      "issuer_corporation_id": 98525792,
-      "issuer_id": 1975735226,
-      "price": 8000000,
-      "reward": 0,
-      "start_location_id": 60012301,
-      "title": "Cloaked Exequror Cruiser",
-      "type": "item_exchange",
-      "volume": 113000
-    };
+    let contracts = this.state.contracts.map( (contract) => {
+      // TODO: A citadel can be returned instead of a station, and it has an ID like 1022875242907
+      // which is greater than an int32. Not sure how to handle these yet.
+      if (contract.end_location_id < 2147483647) { 
+        return (
+          <li><Contract key={contract.contract_id} details={contract}></Contract></li>
+        );
+      }
+      else { 
+        return "";
+      }
+    }
+  );
+
     return (
       <div className="ContractList">
-        <Contract details={details}></Contract>
+        <ul>
+          {contracts}
+        </ul>
       </div>
     );
   }

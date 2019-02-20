@@ -69,6 +69,34 @@ class ESI {
         }
     }
 
+    static async getCorporation(corporationId) {
+        try {
+            const response = await fetch(`https://esi.evetech.net/latest/corporations/${corporationId}/?datasource=tranquility`);
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+    
+            return response.json();
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
+    static async getContracts(regionId, page) {
+        try {
+            const response = await fetch(`https://esi.evetech.net/latest/contracts/public/${regionId}/?datasource=tranquility&page=${page}`);
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+    
+            return response.json();
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
 }
 
 export default ESI;

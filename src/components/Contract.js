@@ -8,19 +8,25 @@ class Contract extends Component {
   constructor() {
     super();
     this.state = { 
-      character: {},
+      issuer: {},
       station: {},
       system: {}
     };
   }
 
   async componentDidMount() {
-    console.log("CDM start");
+    // TODO Assuming a station for now. Could be a citadel. See ContractList.js.
     let station = await ESI.getStation(this.props.details.end_location_id);
     let system = await ESI.getSystem(station.system_id);
-    let character = await ESI.getCharacter(this.props.details.issuer_id);
+    let issuer = '';
+    if (this.props.details.for_corporation) {
+      issuer = await ESI.getCorporation(this.props.details.issuer_corporation_id);
+    }
+    else {
+      issuer = await ESI.getCharacter(this.props.details.issuer_id);
+    }
     this.setState({ 
-      character: character,
+      issuer: issuer,
       station: station,
       system: system
      });
@@ -30,22 +36,30 @@ class Contract extends Component {
     let now = moment.now();
     let expired = moment(this.props.details.date_expired);
     let timeLeft = moment.duration(expired.diff(now)).humanize(true);
-    return (
-      <div className="Contract">
-        <Container>
-          <Row>
-            <Col>{this.props.details.title}</Col>
-            <Col>{this.state.system.name}</Col>
-            <Col>{this.props.details.price}</Col>
-            {/* TODO <Col>Jumps TBD</Col> */}
-            <Col>{ timeLeft }</Col>
-            <Col>{this.state.character.name}</Col>
-            <Col>{this.props.details.date_issued}</Col>
-            {/* TODO <Col>Info by Issuer?</Col> */}
-          </Row>
-        </Container>
-      </div>
-    );
+    
+    if (this.props.details.type === 'item_exchange') {
+      return (
+        <div className="Contract">
+          <Container>
+            <Row>
+              <Col>{this.props.details.title}</Col>{/* TODO Eve client display item name or [Multiple Items] */}
+              <Col>{this.state.system.name}</Col>
+              <Col>{this.props.details.price}</Col>
+              {/* TODO <Col>Jumps TBD</Col> */}
+              <Col>{ timeLeft }</Col>
+              <Col>{this.state.issuer.name}</Col>
+              <Col>{this.props.details.date_issued}</Col>
+              {/* TODO <Col>Info by Issuer?</Col> */}
+            </Row>
+          </Container>
+        </div>
+      );
+    }
+    else {
+      return (
+        <div className="Contract"></div>
+      );
+    }
   }
 }
 
