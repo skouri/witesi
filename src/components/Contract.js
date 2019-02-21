@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import ESI from '../ESI';
 import moment from 'moment';
 import './Contract.css';
-import { Container, Row, Col } from 'react-bootstrap';
 
 class Contract extends Component {
   constructor() {
@@ -72,61 +71,49 @@ class Contract extends Component {
     
     if (this.props.type === 'item_exchange' && this.props.details.type === 'item_exchange') {
       return (
-        <div className="Contract">
-          <Container>
-            <Row>
-              <Col>{this.state.items.length > 1 ? '[Multiple Items]' : this.state.firstItem.name }</Col>
-              <Col>{this.state.endSystem.name}</Col>
-              <Col>{this.wordify(this.props.details.price)}</Col>
-              {/* TODO <Col>Jumps TBD</Col> */}
-              <Col>{ timeLeft }</Col>
-              <Col>{this.state.issuer.name}</Col>
-              <Col>{this.props.details.date_issued}</Col>
-              <Col>{this.props.details.title}</Col>
-            </Row>
-          </Container>
-        </div>
+        <tr>
+          <td>{this.state.items.length > 1 ? '[Multiple Items]' : this.state.firstItem.name }</td>
+          <td>{this.state.endSystem.name}</td>
+          <td>{this.wordify(this.props.details.price)}</td>
+          {/* TODO <td>Jumps TBD</td> */}
+          <td>{ timeLeft }</td>
+          <td>{this.state.issuer.name}</td>
+          <td>{this.props.details.date_issued}</td>
+          <td>{this.props.details.title}</td>
+        </tr>
       );
     }
     else if (this.props.type === 'auction' && this.props.details.type === 'auction') {
       return (
-        <div className="Contract">
-          <Container>
-            <Row>
-              <Col>{this.state.items.length > 1 ? '[Multiple Items]' : this.state.firstItem.name }</Col>
-              <Col>{this.state.endSystem.name}</Col>
-              <Col>{this.wordify(this.props.details.price)}</Col>
-              <Col>{this.wordify(this.props.details.buyout)}</Col>
-              <Col>{this.state.bids.length}</Col>
-              {/* TODO <Col>Jumps TBD</Col> */}
-              <Col>{ timeLeft }</Col>
-              <Col>{this.state.issuer.name}</Col>
-              <Col>{this.props.details.date_issued}</Col>
-              <Col>{this.props.details.title}</Col>
-            </Row>
-          </Container>
-        </div>
+        <tr>
+          <td>{this.state.items.length > 1 ? '[Multiple Items]' : this.state.firstItem.name }</td>
+          <td>{this.state.endSystem.name}</td>
+          <td>{this.wordify(this.props.details.price)}</td>
+          <td>{this.wordify(this.props.details.buyout)}</td>
+          <td>{this.state.bids.length}</td>
+          {/* TODO <td>Jumps TBD</td> */}
+          <td>{ timeLeft }</td>
+          <td>{this.state.issuer.name}</td>
+          <td>{this.props.details.date_issued}</td>
+          <td>{this.props.details.title}</td>
+        </tr>
       );
     }
     else if (this.props.type === 'courier' && this.props.details.type === 'courier') {
       return (
-        <div className="Contract">
-          <Container>
-            <Row>
-              <Col>{this.state.startSystem.name}</Col>
-              <Col>{this.state.endSystem.name}</Col>
-              <Col>{this.props.details.volume}</Col>
-              <Col>{this.wordify(this.props.details.reward)}</Col>
-              <Col>{this.wordify(this.props.details.collateral)}</Col>
-              <Col>{this.state.jumps.length}</Col>
-              {/* TODO <Col>Jumps TBD</Col> */}
-              <Col>{ timeLeft }</Col>
-              <Col>{this.state.issuer.name}</Col>
-              <Col>{this.props.details.date_issued}</Col>
-              <Col>{this.props.details.title}</Col>
-            </Row>
-          </Container>
-        </div>
+        <tr>
+          <td>{this.state.startSystem.name}</td>
+          <td>{this.state.endSystem.name}</td>
+          <td>{this.props.details.volume}</td>
+          <td>{this.wordify(this.props.details.reward)}</td>
+          <td>{this.wordify(this.props.details.collateral)}</td>
+          <td>{this.state.jumps.length}</td>
+          {/* TODO <td>Jumps TBD</td> */}
+          <td>{ timeLeft }</td>
+          <td>{this.state.issuer.name}</td>
+          <td>{this.props.details.date_issued}</td>
+          <td>{this.props.details.title}</td>
+        </tr>
       );
     }
     else {

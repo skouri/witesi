@@ -1,6 +1,7 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { Button } from '@storybook/react/demo';
+import { Table } from 'react-bootstrap';
 import Contract from '../src/components/Contract';
 
 storiesOf('Button', module)
@@ -30,7 +31,11 @@ storiesOf('Contract', module)
             "volume": 234000
           };
         return (
-            <Contract details={details} type='item_exchange'></Contract>
+            <Table striped bordered hover>
+                <tbody>
+                    <Contract details={details} type='item_exchange'></Contract>
+                </tbody>
+            </Table>
         )
     })
     .add('Auction', () => {
@@ -51,7 +56,11 @@ storiesOf('Contract', module)
             "volume": 0.2
           };
         return (
-            <Contract details={details} type='auction'></Contract>
+            <Table striped bordered hover>
+                <tbody>
+                    <Contract details={details} type='auction'></Contract>
+                </tbody>
+            </Table>
         )
     })
     .add('Courier', () => {
@@ -72,6 +81,10 @@ storiesOf('Contract', module)
             "volume": 115000
           };
         return (
-            <Contract details={details} type='courier'></Contract>
+            <Table striped bordered hover>
+                <tbody>
+                    <Contract details={details} type='courier'></Contract>
+                </tbody>
+            </Table>
         )
     })
