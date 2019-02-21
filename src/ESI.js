@@ -104,6 +104,36 @@ class ESI {
         }
     }
 
+   // This route is cached for up to 3600 seconds
+   static async getContractItemList(contractId, page) {
+        try {
+            const response = await cachedFetch(`https://esi.evetech.net/latest/contracts/public/items/${contractId}/?datasource=tranquility&page=${page}`, 3600);
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+
+            return response.json();
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }  
+    
+    // This route expires daily at 11:05
+    static async getType(typeId) {
+        try {
+            const response = await cachedFetch(`https://esi.evetech.net/latest/universe/types/${typeId}/?datasource=tranquility&language=en-us
+            `);
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+    
+            return response.json();
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
 }
 
 // cachedFetch taken from https://www.sitepoint.com/cache-fetched-ajax-requests/

@@ -10,7 +10,9 @@ class Contract extends Component {
     this.state = { 
       issuer: {},
       station: {},
-      system: {}
+      system: {},
+      items: [],
+      firstItem: {}
     };
   }
 
@@ -18,6 +20,14 @@ class Contract extends Component {
     // TODO Assuming a station for now. Could be a citadel. See ContractList.js.
     let station = await ESI.getStation(this.props.details.end_location_id);
     let system = await ESI.getSystem(station.system_id);
+    
+    let items = [];
+    let firstItem = {};
+    if (this.props.details.type === 'item_exchange' || this.props.details.type === 'auction') {
+        items = await ESI.getContractItemList(this.props.details.contract_id, 1 /* TODO */);
+        firstItem = await ESI.getType(items[0].type_id);
+    }
+
     let issuer = '';
     if (this.props.details.for_corporation) {
       issuer = await ESI.getCorporation(this.props.details.issuer_corporation_id);
@@ -28,7 +38,9 @@ class Contract extends Component {
     this.setState({ 
       issuer: issuer,
       station: station,
-      system: system
+      system: system, 
+      items: items,
+      firstItem: firstItem
      });
   }
 
@@ -42,14 +54,14 @@ class Contract extends Component {
         <div className="Contract">
           <Container>
             <Row>
-              <Col>{this.props.details.title}</Col>{/* TODO Eve client display item name or [Multiple Items] */}
+              <Col>{this.state.items.length > 1 ? '[Multiple Items]' : this.state.firstItem.name }</Col>
               <Col>{this.state.system.name}</Col>
-              <Col>{this.props.details.price}</Col>
+              <Col>{this.wordify(this.props.details.price)}</Col>
               {/* TODO <Col>Jumps TBD</Col> */}
               <Col>{ timeLeft }</Col>
               <Col>{this.state.issuer.name}</Col>
               <Col>{this.props.details.date_issued}</Col>
-              {/* TODO <Col>Info by Issuer?</Col> */}
+              <Col>{this.props.details.title}</Col>
             </Row>
           </Container>
         </div>
@@ -60,6 +72,20 @@ class Contract extends Component {
         <div className="Contract"></div>
       );
     }
+  }
+
+  wordify(value) {
+
+    // Nine Zeroes for Billions
+    return Math.abs(Number(value)) >= 1.0e+9
+      ? Math.abs(Number(value)) / 1.0e+9 + " billion"
+      // Six Zeroes for Millions 
+      : Math.abs(Number(value)) >= 1.0e+6
+      ? Math.abs(Number(value)) / 1.0e+6 + " million"
+      // Three Zeroes for Thousands
+      : Math.abs(Number(value)) >= 1.0e+3
+      ? Math.abs(Number(value)) / 1.0e+3 + " thousand"
+      : Math.abs(Number(value));
   }
 }
 
