@@ -19,20 +19,23 @@ class ContractList extends Component {
   }
 
   render() {
-    let contracts = this.state.contracts.map( (contract) => {
-      // TODO: A citadel can be returned instead of a station, and it has an ID like 1022875242907
-      // which is greater than an int32. Not sure how to handle these yet.
-      if (contract.end_location_id < 2147483647) { 
-        return (
-          <li><Contract key={contract.contract_id} details={contract}></Contract></li>
-        );
+    let contracts = [];
+    this.state.contracts.forEach( (contract) => {
+        // TODO: A citadel can be returned instead of a station, and it has an ID like 1022875242907
+        // which is greater than an int32. Not sure how to handle these yet.
+        if (contract.type === this.props.type) {
+          if (contract.end_location_id < 2147483647) {
+            contracts.push( 
+              <li><Contract key={contract.contract_id} details={contract} type={this.props.type}></Contract></li>
+            );
+          }
+          else { 
+            // TODO Is this a citadel?
+          }
+        }
       }
-      else { 
-        return "";
-      }
-    }
-  );
-
+    );
+    console.log("contracts.length = " + contracts.length);
     return (
       <div className="ContractList">
         <ul>

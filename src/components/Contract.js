@@ -9,23 +9,34 @@ class Contract extends Component {
     super();
     this.state = { 
       issuer: {},
-      station: {},
-      system: {},
+      startStation: {},
+      endStation: {},
+      startSystem: {},
+      endSystem: {},
       items: [],
-      firstItem: {}
+      firstItem: {},
+      jumps: []
     };
   }
 
   async componentDidMount() {
     // TODO Assuming a station for now. Could be a citadel. See ContractList.js.
-    let station = await ESI.getStation(this.props.details.end_location_id);
-    let system = await ESI.getSystem(station.system_id);
-    
+    let endStation = await ESI.getStation(this.props.details.end_location_id);
+    let endSystem = await ESI.getSystem(endStation.system_id);
+
+    let startStation = await ESI.getStation(this.props.details.start_location_id);
+    let startSystem = await ESI.getSystem(startStation.system_id);
+
     let items = [];
     let firstItem = {};
     if (this.props.details.type === 'item_exchange' || this.props.details.type === 'auction') {
         items = await ESI.getContractItemList(this.props.details.contract_id, 1 /* TODO */);
         firstItem = await ESI.getType(items[0].type_id);
+    }
+
+    let jumps = [];
+    if (this.props.details.type === 'courier') {
+        jumps = await ESI.getRoute(startSystem.system_id, endSystem.system_id);
     }
 
     let issuer = '';
@@ -37,10 +48,13 @@ class Contract extends Component {
     }
     this.setState({ 
       issuer: issuer,
-      station: station,
-      system: system, 
+      endStation: endStation,
+      startStation: startStation,
+      endSystem: endSystem, 
+      startSystem: startSystem,
       items: items,
-      firstItem: firstItem
+      firstItem: firstItem,
+      jumps: jumps
      });
   }
 
@@ -49,14 +63,35 @@ class Contract extends Component {
     let expired = moment(this.props.details.date_expired);
     let timeLeft = moment.duration(expired.diff(now)).humanize(true);
     
-    if (this.props.details.type === 'item_exchange') {
+    if (this.props.type === 'item_exchange' && this.props.details.type === 'item_exchange') {
       return (
         <div className="Contract">
           <Container>
             <Row>
               <Col>{this.state.items.length > 1 ? '[Multiple Items]' : this.state.firstItem.name }</Col>
-              <Col>{this.state.system.name}</Col>
+              <Col>{this.state.endSystem.name}</Col>
               <Col>{this.wordify(this.props.details.price)}</Col>
+              {/* TODO <Col>Jumps TBD</Col> */}
+              <Col>{ timeLeft }</Col>
+              <Col>{this.state.issuer.name}</Col>
+              <Col>{this.props.details.date_issued}</Col>
+              <Col>{this.props.details.title}</Col>
+            </Row>
+          </Container>
+        </div>
+      );
+    }
+    else if (this.props.type === 'courier' && this.props.details.type === 'courier') {
+      return (
+        <div className="Contract">
+          <Container>
+            <Row>
+              <Col>{this.state.startSystem.name}</Col>
+              <Col>{this.state.endSystem.name}</Col>
+              <Col>{this.props.details.volume}</Col>
+              <Col>{this.wordify(this.props.details.reward)}</Col>
+              <Col>{this.wordify(this.props.details.collateral)}</Col>
+              <Col>{this.state.jumps.length}</Col>
               {/* TODO <Col>Jumps TBD</Col> */}
               <Col>{ timeLeft }</Col>
               <Col>{this.state.issuer.name}</Col>
@@ -74,8 +109,8 @@ class Contract extends Component {
     }
   }
 
+  // Stolen from https://stackoverflow.com/a/36734774
   wordify(value) {
-
     // Nine Zeroes for Billions
     return Math.abs(Number(value)) >= 1.0e+9
       ? Math.abs(Number(value)) / 1.0e+9 + " billion"

@@ -122,8 +122,22 @@ class ESI {
     // This route expires daily at 11:05
     static async getType(typeId) {
         try {
-            const response = await cachedFetch(`https://esi.evetech.net/latest/universe/types/${typeId}/?datasource=tranquility&language=en-us
-            `);
+            const response = await cachedFetch(`https://esi.evetech.net/latest/universe/types/${typeId}/?datasource=tranquility&language=en-us`);
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+    
+            return response.json();
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
+    // This route is cached for up to 86400 seconds
+    static async getRoute(origin, destination) {
+        try {
+            const response = await cachedFetch(`https://esi.evetech.net/latest/route/${origin}/${destination}/?datasource=tranquility&flag=shortest`);
             if (!response.ok) {
                 throw Error(response.statusText);
             }

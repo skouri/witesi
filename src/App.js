@@ -14,16 +14,18 @@ class App extends Component {
   async componentDidMount() {
     let regions = await ESI.getRegionList();
 
+    let tempRegions = [];
     for (const regionId of regions) {
       let region = await ESI.getRegion(regionId);
-      this.setState( { regions: [...this.state.regions, region] } );
+      tempRegions.push(region);
     };
+    this.setState( { regions: tempRegions } );
   }
 
   render() {
     return (
       <div className="App">
-        <ContractList regionId='10000001' /* TODO */ page='1' ></ContractList>
+        <ContractList regionId='10000001' /* TODO */ page='1' type='courier'></ContractList>
       </div>
     );
   }
