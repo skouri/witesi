@@ -148,6 +148,21 @@ class ESI {
             console.log(error);
         }
     }
+
+    //This route is cached for up to 300 seconds
+    static async getBids(contractId,page) { // TODO Total the pages.
+        try {
+            const response = await cachedFetch(`https://esi.evetech.net/latest/contracts/public/bids/${contractId}/?datasource=tranquility&page=${page}`, 300);
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+    
+            return response.json();
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
 }
 
 // cachedFetch taken from https://www.sitepoint.com/cache-fetched-ajax-requests/

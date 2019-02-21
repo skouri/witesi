@@ -33,9 +33,27 @@ storiesOf('Contract', module)
             <Contract details={details} type='item_exchange'></Contract>
         )
     })
-    .add('Auction', () => (
-        <Contract></Contract>
-    ))
+    .add('Auction', () => {
+        let details = {
+            "buyout": 2000000,
+            "contract_id": 142654975,
+            "date_expired": "2019-03-04T18:29:52Z",
+            "date_issued": "2019-02-18T00:00:00Z",
+            "days_to_complete": 0,
+            "end_location_id": 60012124,
+            "issuer_corporation_id": 98462718,
+            "issuer_id": 93410629,
+            "price": 1000000,
+            "reward": 0,
+            "start_location_id": 60012124,
+            "title": "Moved Systems - Must Go!!",
+            "type": "auction",
+            "volume": 0.2
+          };
+        return (
+            <Contract details={details} type='auction'></Contract>
+        )
+    })
     .add('Courier', () => {
         let details = {
             "collateral": 7500000,

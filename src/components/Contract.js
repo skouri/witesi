@@ -15,7 +15,8 @@ class Contract extends Component {
       endSystem: {},
       items: [],
       firstItem: {},
-      jumps: []
+      jumps: [],
+      bids: []
     };
   }
 
@@ -39,6 +40,11 @@ class Contract extends Component {
         jumps = await ESI.getRoute(startSystem.system_id, endSystem.system_id);
     }
 
+    let bids = [];
+    if (this.props.details.type === 'auction') {
+      bids = await ESI.getBids(this.props.details.contract_id, 1); // TODO Total bids (all pages).
+    }
+
     let issuer = '';
     if (this.props.details.for_corporation) {
       issuer = await ESI.getCorporation(this.props.details.issuer_corporation_id);
@@ -54,7 +60,8 @@ class Contract extends Component {
       startSystem: startSystem,
       items: items,
       firstItem: firstItem,
-      jumps: jumps
+      jumps: jumps,
+      bids: bids
      });
   }
 
@@ -71,6 +78,26 @@ class Contract extends Component {
               <Col>{this.state.items.length > 1 ? '[Multiple Items]' : this.state.firstItem.name }</Col>
               <Col>{this.state.endSystem.name}</Col>
               <Col>{this.wordify(this.props.details.price)}</Col>
+              {/* TODO <Col>Jumps TBD</Col> */}
+              <Col>{ timeLeft }</Col>
+              <Col>{this.state.issuer.name}</Col>
+              <Col>{this.props.details.date_issued}</Col>
+              <Col>{this.props.details.title}</Col>
+            </Row>
+          </Container>
+        </div>
+      );
+    }
+    else if (this.props.type === 'auction' && this.props.details.type === 'auction') {
+      return (
+        <div className="Contract">
+          <Container>
+            <Row>
+              <Col>{this.state.items.length > 1 ? '[Multiple Items]' : this.state.firstItem.name }</Col>
+              <Col>{this.state.endSystem.name}</Col>
+              <Col>{this.wordify(this.props.details.price)}</Col>
+              <Col>{this.wordify(this.props.details.buyout)}</Col>
+              <Col>{this.state.bids.length}</Col>
               {/* TODO <Col>Jumps TBD</Col> */}
               <Col>{ timeLeft }</Col>
               <Col>{this.state.issuer.name}</Col>

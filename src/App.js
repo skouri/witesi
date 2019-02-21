@@ -25,7 +25,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <ContractList regionId='10000001' /* TODO */ page='1' type='courier'></ContractList>
+        <ContractList regionId='10000001' /* TODO */ page='1' type='auction'></ContractList>
       </div>
     );
   }
