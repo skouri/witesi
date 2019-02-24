@@ -23,6 +23,11 @@ class App extends Component {
       tempRegions.push(region);
     };
 
+    // Note: 10000002 is the "Forge" region which contains the "Jita" star system.
+    // This is where the majority of trade occurs, and thus will likely return the most data.
+    // Having tried this, it was a very bad idea. This amount of data is something you would want to
+    // pre-load and cache heavily.
+    // Using 10000001 which is the "Derelik" region. Less data, but useful for testing app.
     let contracts = await ESI.getAllContractInfo(10000001, 1 /* TODO */);
 
     this.setState({ 

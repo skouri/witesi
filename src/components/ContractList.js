@@ -63,7 +63,7 @@ class ContractList extends Component {
     }
 
     return (
-        <Table striped bordered hover size="sm">
+        <Table bordered hover size="sm">
         {headers}
           <tbody>
             {contracts}
