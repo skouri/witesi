@@ -8,6 +8,7 @@ class App extends Component {
   constructor() {
     super();
     this.state = { 
+      contracts: [],
       regions: [],
       type: 'auction' 
     };
@@ -21,9 +22,16 @@ class App extends Component {
       let region = await ESI.getRegion(regionId);
       tempRegions.push(region);
     };
-    this.setState( { regions: tempRegions } );
+
+    let contracts = await ESI.getAllContractInfo(10000001, 1 /* TODO */);
+
+    this.setState({ 
+      regions: tempRegions,
+      contracts: contracts,
+      type: 'auction' 
+    });
   }
-  // TODO defaultChecked now working.
+
   render() {
     return (
       <div className="App">
@@ -34,7 +42,7 @@ class App extends Component {
             <ToggleButton type="radio" value='courier' name="radio" onClick={() => this.setState( {type: 'courier'} )}>Courier</ToggleButton>
           </ToggleButtonGroup>
         </ButtonToolbar>
-        <ContractList regionId='10000001' /* TODO */ page='1' type={this.state.type}></ContractList>
+        <ContractList /* TODO */ page='1' contracts={this.state.contracts} type={this.state.type}></ContractList>
       </div>
     );
   }

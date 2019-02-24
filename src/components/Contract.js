@@ -1,124 +1,63 @@
 import React, { Component } from 'react';
-import ESI from '../ESI';
 import moment from 'moment';
 import './Contract.css';
 
 class Contract extends Component {
-  constructor() {
-    super();
-    this.state = { 
-      issuer: {},
-      startStation: {},
-      endStation: {},
-      startSystem: {},
-      endSystem: {},
-      items: [],
-      firstItem: {},
-      jumps: [],
-      bids: []
-    };
-  }
-
-  async componentDidMount() {
-    // TODO Assuming a station for now. Could be a citadel. See ContractList.js.
-    let endStation = await ESI.getStation(this.props.details.end_location_id);
-    let endSystem = await ESI.getSystem(endStation.system_id);
-
-    let startStation = await ESI.getStation(this.props.details.start_location_id);
-    let startSystem = await ESI.getSystem(startStation.system_id);
-
-    let items = [];
-    let firstItem = {};
-    if (this.props.details.type === 'item_exchange' || this.props.details.type === 'auction') {
-        items = await ESI.getContractItemList(this.props.details.contract_id, 1 /* TODO */);
-        firstItem = await ESI.getType(items[0].type_id);
-    }
-
-    let jumps = [];
-    if (this.props.details.type === 'courier') {
-        jumps = await ESI.getRoute(startSystem.system_id, endSystem.system_id);
-    }
-
-    let bids = [];
-    if (this.props.details.type === 'auction') {
-      bids = await ESI.getBids(this.props.details.contract_id, 1); // TODO Total bids (all pages).
-    }
-
-    let issuer = '';
-    if (this.props.details.for_corporation) {
-      issuer = await ESI.getCorporation(this.props.details.issuer_corporation_id);
-    }
-    else {
-      issuer = await ESI.getCharacter(this.props.details.issuer_id);
-    }
-    this.setState({ 
-      issuer: issuer,
-      endStation: endStation,
-      startStation: startStation,
-      endSystem: endSystem, 
-      startSystem: startSystem,
-      items: items,
-      firstItem: firstItem,
-      jumps: jumps,
-      bids: bids
-     });
-  }
-
   render() {
     let now = moment.now();
-    let expired = moment(this.props.details.date_expired);
+    let expired = moment(this.props.contract.date_expired);
     let timeLeft = moment.duration(expired.diff(now)).humanize(true);
     
-    if (this.props.type === 'item_exchange' && this.props.details.type === 'item_exchange') {
+    if (this.props.type === 'item_exchange' && this.props.contract.type === 'item_exchange') {
       return (
         <tr>
-          <td>{this.state.items.length > 1 ? '[Multiple Items]' : this.state.firstItem.name }</td>
-          <td>{this.state.endSystem.name}</td>
-          <td>{this.wordify(this.props.details.price)}</td>
+          <td>{this.props.contract.info.items.length > 1 ? '[Multiple Items]' : this.props.contract.info.firstItem.name }</td>
+          <td>{this.props.contract.info.endSystem.name}</td>
+          <td>{this.wordify(this.props.contract.price)}</td>
           {/* TODO <td>Jumps TBD</td> */}
           <td>{ timeLeft }</td>
-          <td>{this.state.issuer.name}</td>
-          <td>{this.props.details.date_issued}</td>
-          <td>{this.props.details.title}</td>
+          <td>{this.props.contract.info.issuer.name}</td>
+          <td>{this.props.contract.date_issued}</td>
+          <td>{this.props.contract.title}</td>
         </tr>
       );
     }
-    else if (this.props.type === 'auction' && this.props.details.type === 'auction') {
+    else if (this.props.type === 'auction' && this.props.contract.type === 'auction') {
       return (
         <tr>
-          <td>{this.state.items.length > 1 ? '[Multiple Items]' : this.state.firstItem.name }</td>
-          <td>{this.state.endSystem.name}</td>
-          <td>{this.wordify(this.props.details.price)}</td>
-          <td>{this.wordify(this.props.details.buyout)}</td>
-          <td>{this.state.bids.length}</td>
+          <td>{this.props.contract.info.items.length > 1 ? '[Multiple Items]' : this.props.contract.info.firstItem.name }</td>
+          <td>{this.props.contract.info.endSystem.name}</td>
+          <td>{this.wordify(this.props.contract.price)}</td>
+          <td>{this.wordify(this.props.contract.buyout)}</td>
+          <td>{this.props.contract.info.bids.length}</td>
           {/* TODO <td>Jumps TBD</td> */}
           <td>{ timeLeft }</td>
-          <td>{this.state.issuer.name}</td>
-          <td>{this.props.details.date_issued}</td>
-          <td>{this.props.details.title}</td>
+          <td>{this.props.contract.info.issuer.name}</td>
+          <td>{this.props.contract.date_issued}</td>
+          <td>{this.props.contract.title}</td>
         </tr>
       );
     }
-    else if (this.props.type === 'courier' && this.props.details.type === 'courier') {
+    else if (this.props.type === 'courier' && this.props.contract.type === 'courier') {
       return (
         <tr>
-          <td>{this.state.startSystem.name}</td>
-          <td>{this.state.endSystem.name}</td>
-          <td>{this.props.details.volume}</td>
-          <td>{this.wordify(this.props.details.reward)}</td>
-          <td>{this.wordify(this.props.details.collateral)}</td>
-          <td>{this.state.jumps.length}</td>
+          <td>{this.props.contract.info.startSystem.name}</td>
+          <td>{this.props.contract.info.endSystem.name}</td>
+          <td>{this.props.contract.volume}</td>
+          <td>{this.wordify(this.props.contract.reward)}</td>
+          <td>{this.wordify(this.props.contract.collateral)}</td>
+          <td>{this.props.contract.info.jumps.length}</td>
           {/* TODO <td>Jumps TBD</td> */}
           <td>{ timeLeft }</td>
-          <td>{this.state.issuer.name}</td>
-          <td>{this.props.details.date_issued}</td>
-          <td>{this.props.details.title}</td>
+          <td>{this.props.contract.info.issuer.name}</td>
+          <td>{this.props.contract.date_issued}</td>
+          <td>{this.props.contract.title}</td>
         </tr>
       );
     }
     else {
       return (
-        <div className="Contract"></div>
+        <tr></tr>
       );
     }
   }

@@ -1,4 +1,56 @@
 class ESI {
+    static async getAllContractInfo(regionId, page) {
+        let contracts = await ESI.getContractsByRegion(regionId, page);
+
+        let stationContracts = [];
+
+        for (const contract of contracts) {
+            contract.info = {};
+
+            // TODO: A citadel can be returned instead of a station, and it has an ID like 1022875242907
+            // which is greater than an int32. Not sure how to handle these yet.
+            if (contract.start_location_id < 2147483647 &&
+                contract.end_location_id < 2147483647) {
+
+            contract.info.endStation = await ESI.getStation(contract.end_location_id);
+            contract.info.endSystem = await ESI.getSystem(contract.info.endStation.system_id);
+            contract.info.startStation = await ESI.getStation(contract.start_location_id);
+            contract.info.startSystem = await ESI.getSystem(contract.info.startStation.system_id);
+
+            contract.info.items = [];
+            contract.info.firstItem = {};
+            if (contract.type === 'item_exchange' || contract.type === 'auction') {
+                contract.info.items = await ESI.getContractItemList(contract.contract_id, 1 /* TODO */);
+                contract.info.firstItem = await ESI.getType(contract.info.items[0].type_id);
+            }
+    
+            contract.info.jumps = [];
+            if (contract.type === 'courier') {
+                contract.info.jumps = await ESI.getRoute(contract.info.startSystem.system_id, contract.info.endSystem.system_id);
+            }
+    
+            contract.info.bids = [];
+            if (contract.type === 'auction') {
+                contract.info.bids = await ESI.getBids(contract.contract_id, 1); // TODO Total bids (all pages).
+            }
+    
+            contract.info.issuer = '';
+            if (contracts.for_corporation) {
+                contract.info.issuer = await ESI.getCorporation(contract.issuer_corporation_id);
+            }
+            else {
+                contract.info.issuer = await ESI.getCharacter(contract.issuer_id);
+            }
+            stationContracts.push(contract);
+            }
+            else { 
+            // TODO Is this a citadel?
+            }
+        };
+
+        return stationContracts;
+    }
+
     // This route expires daily at 11:05
     static async getRegion(regionId) {
         try {
@@ -90,7 +142,7 @@ class ESI {
     }
 
     // This route is cached for up to 1800 seconds
-    static async getContracts(regionId, page) {
+    static async getContractsByRegion(regionId, page) {
         try {
             const response = await cachedFetch(`https://esi.evetech.net/latest/contracts/public/${regionId}/?datasource=tranquility&page=${page}`, 1800);
             if (!response.ok) {
@@ -111,7 +163,7 @@ class ESI {
             if (!response.ok) {
                 throw Error(response.statusText);
             }
-
+            
             return response.json();
         }
         catch (error) {
