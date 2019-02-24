@@ -25,7 +25,8 @@ class ContractList extends Component {
         // TODO: A citadel can be returned instead of a station, and it has an ID like 1022875242907
         // which is greater than an int32. Not sure how to handle these yet.
         if (contract.type === this.props.type) {
-          if (contract.end_location_id < 2147483647) {
+          if (contract.start_location_id < 2147483647 &&
+              contract.end_location_id < 2147483647) {
             contracts.push( 
               <Contract key={contract.contract_id} details={contract} type={this.props.type}></Contract>
             );
