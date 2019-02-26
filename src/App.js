@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import ContractList from './components/ContractList';
+import { Container, Row, Col } from 'react-bootstrap';
 import { ButtonToolbar, ToggleButton, ToggleButtonGroup } from 'react-bootstrap';
 import ESI from './ESI';
 import Loading from './components/Loading';
+import Search from './components/Search';
 import './App.css';
 
 class App extends Component {
@@ -15,12 +17,17 @@ class App extends Component {
       modalShow: true,
       esiStatus: '',
       esiContractIndex: 0,
-      esiContractTotal: 0
+      esiContractTotal: 0,
+      searchText: ''
     };
   }
 
   setEsiStatus = (value, index, total) => {
     this.setState( { esiContractIndex: index, esiStatus: value, esiContractTotal: total } );
+  }
+
+  handleSearch = (text) => { 
+    this.setState( { searchText: text } );
   }
 
   async componentDidMount() {
@@ -46,7 +53,8 @@ class App extends Component {
       modalShow: false,
       esiStatus: '',
       esiContractIndex: 0,
-      esiContractTotal: contracts.length
+      esiContractTotal: contracts.length,
+      searchText: ''
     });
   }
 
@@ -59,14 +67,23 @@ class App extends Component {
           loadingIndex={this.state.esiContractIndex}
           loadingTotal={this.state.esiContractTotal}
         />
-        <ButtonToolbar>
-          <ToggleButtonGroup name='type' toggle defaultValue={this.state.type}>
-            <ToggleButton type="radio" value='item_exchange' name="radio" onClick={() => this.setState( {type:'item_exchange'} )}>Exchange</ToggleButton>
-            <ToggleButton type="radio" value='auction' name="radio" onClick={() => this.setState( {type: 'auction'} )}>Auction</ToggleButton>
-            <ToggleButton type="radio" value='courier' name="radio" onClick={() => this.setState( {type: 'courier'} )}>Courier</ToggleButton>
-          </ToggleButtonGroup>
-        </ButtonToolbar>
-        <ContractList /* TODO */ page='1' contracts={this.state.contracts} type={this.state.type}></ContractList>
+        <Container>
+          <Row>
+            <Col>
+              <ButtonToolbar>
+                <ToggleButtonGroup name='type' toggle defaultValue={this.state.type}>
+                  <ToggleButton type="radio" value='item_exchange' name="radio" onClick={() => this.setState( {type:'item_exchange'} )}>Exchange</ToggleButton>
+                  <ToggleButton type="radio" value='auction' name="radio" onClick={() => this.setState( {type: 'auction'} )}>Auction</ToggleButton>
+                  <ToggleButton type="radio" value='courier' name="radio" onClick={() => this.setState( {type: 'courier'} )}>Courier</ToggleButton>
+                </ToggleButtonGroup>
+              </ButtonToolbar>
+            </Col>
+            <Col>
+              <Search handleSearch={ this.handleSearch }></Search>
+            </Col>
+          </Row>
+        </Container>
+        <ContractList /* TODO */ page='1' searchText={this.state.searchText} contracts={this.state.contracts} type={this.state.type}></ContractList>
       </div>
     );
   }

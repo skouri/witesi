@@ -8,7 +8,7 @@ class ContractList extends Component {
     let contracts = [];
     this.props.contracts.forEach( (contract, index) => {
         contracts.push( 
-          <Contract key={contract.contract_id} contract={contract} type={this.props.type}></Contract>
+          <Contract key={contract.contract_id} contract={contract} searchText={this.props.searchText} type={this.props.type}></Contract>
         );
       }
     );

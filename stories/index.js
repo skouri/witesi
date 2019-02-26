@@ -1,16 +1,8 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import { Button } from '@storybook/react/demo';
 import { Table } from 'react-bootstrap';
 import Contract from '../src/components/Contract';
-
-storiesOf('Button', module)
-  .add('with text', () => (
-    <Button>Hello Button</Button>
-  ))
-  .add('with some emoji', () => (
-    <Button><span role="img" aria-label="so cool">😀 😎 👍 💯</span></Button>
-  )); 
+import Search from '../src/components/Search';
 
 storiesOf('Contract', module)
     .add('Item Exchange', () => {
@@ -43,3 +35,12 @@ storiesOf('Contract', module)
             </Table>
         )
     })
+
+    storiesOf('Misc', module)
+        .add('Search', () => {
+            let handleSearch = (text) => { console.log('handleSearch: ' + text); }
+            return (
+                <Search handleSearch={ handleSearch }>
+                </Search>
+            )
+        })
