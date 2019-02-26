@@ -1,11 +1,11 @@
 import React from 'react';
-import { Modal } from 'react-bootstrap';
+import { Modal, ModalFooter, ProgressBar } from 'react-bootstrap';
 
 class Loading extends React.Component {
     render() {
       return (
         <Modal
-          {...this.props.show}
+          show={this.props.show}
           size="lg"
           aria-labelledby="contained-modal-title-vcenter"
           centered
@@ -17,9 +17,12 @@ class Loading extends React.Component {
           </Modal.Header>
           <Modal.Body>
             {this.props.loadingInfo}
+            <ProgressBar animated now={100 * this.props.loadingIndex / this.props.loadingTotal} />
           </Modal.Body>
-          <Modal.Footer>
-          </Modal.Footer>
+          <ModalFooter>
+            {/* I wanted this here, but it wasn't showing up for some reason. */}
+            {/* <ProgressBar now={100 * this.props.loadingIndex / this.props.loadingTotal} /> */}
+          </ModalFooter>
         </Modal>
       );
     }
