@@ -1,10 +1,13 @@
 class ESI {
-    static async getAllContractInfo(regionId, page) {
+    static async getAllContractInfo(regionId, page, setEsiStatus) {
+        let index = 0;
+        setEsiStatus('Retrieving contract list.', index, 0);
         let contracts = await ESI.getContractsByRegion(regionId, page);
 
         let stationContracts = [];
 
         for (const contract of contracts) {
+            index++;
             contract.info = {};
 
             // TODO: A citadel can be returned instead of a station, and it has an ID like 1022875242907
@@ -12,6 +15,7 @@ class ESI {
             if (contract.start_location_id < 2147483647 &&
                 contract.end_location_id < 2147483647) {
 
+            setEsiStatus(`Retrieving stations for contract ${contract.contract_id}`, index, contracts.length);
             contract.info.endStation = await ESI.getStation(contract.end_location_id);
             contract.info.endSystem = await ESI.getSystem(contract.info.endStation.system_id);
             contract.info.startStation = await ESI.getStation(contract.start_location_id);
@@ -20,20 +24,26 @@ class ESI {
             contract.info.items = [];
             contract.info.firstItem = {};
             if (contract.type === 'item_exchange' || contract.type === 'auction') {
+                setEsiStatus(`Retrieving items for contract ${contract.contract_id}`, index, contracts.length);
                 contract.info.items = await ESI.getContractItemList(contract.contract_id, 1 /* TODO */);
-                contract.info.firstItem = await ESI.getType(contract.info.items[0].type_id);
+                if (contract.info.items.length > 0) {
+                    contract.info.firstItem = await ESI.getType(contract.info.items[0].type_id);
+                }
             }
     
             contract.info.jumps = [];
             if (contract.type === 'courier') {
+                setEsiStatus(`Calculating jumps for contract ${contract.contract_id}`, index, contracts.length);
                 contract.info.jumps = await ESI.getRoute(contract.info.startSystem.system_id, contract.info.endSystem.system_id);
             }
     
             contract.info.bids = [];
             if (contract.type === 'auction') {
+                setEsiStatus(`Counting bids for contract ${contract.contract_id}`, index, contracts.length);
                 contract.info.bids = await ESI.getBids(contract.contract_id, 1); // TODO Total bids (all pages).
             }
     
+            setEsiStatus(`Retrieving parties for contract ${contract.contract_id}`, index, contracts.length);
             contract.info.issuer = '';
             if (contracts.for_corporation) {
                 contract.info.issuer = await ESI.getCorporation(contract.issuer_corporation_id);
@@ -163,8 +173,12 @@ class ESI {
             if (!response.ok) {
                 throw Error(response.statusText);
             }
-            
-            return response.json();
+            if (response.status === 204) {
+                console.log(contractId);
+                return [];
+            }
+            else 
+                return response.json();
         }
         catch (error) {
             console.log(error);

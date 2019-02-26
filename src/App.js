@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ContractList from './components/ContractList';
 import { ButtonToolbar, ToggleButton, ToggleButtonGroup } from 'react-bootstrap';
 import ESI from './ESI';
+import Loading from './components/Loading';
 import './App.css';
 
 class App extends Component {
@@ -10,8 +11,16 @@ class App extends Component {
     this.state = { 
       contracts: [],
       regions: [],
-      type: 'auction' 
+      type: 'auction',
+      modalShow: true,
+      esiStatus: '',
+      esiContractIndex: 0,
+      esiContractTotal: 0
     };
+  }
+
+  setEsiStatus = (value, index, total) => {
+    this.setState( { esiContractIndex: index, esiStatus: value, esiContractTotal: total } );
   }
 
   async componentDidMount() {
@@ -28,18 +37,28 @@ class App extends Component {
     // Having tried this, it was a very bad idea. This amount of data is something you would want to
     // pre-load and cache heavily.
     // Using 10000001 which is the "Derelik" region. Less data, but useful for testing app.
-    let contracts = await ESI.getAllContractInfo(10000001, 1 /* TODO */);
+    let contracts = await ESI.getAllContractInfo(10000001, 1 /* TODO */, this.setEsiStatus);
 
     this.setState({ 
       regions: tempRegions,
       contracts: contracts,
-      type: 'auction' 
+      type: 'auction', 
+      modalShow: false,
+      esiStatus: '',
+      esiContractIndex: 0,
+      esiContractTotal: contracts.length
     });
   }
 
   render() {
     return (
       <div className="App">
+        <Loading
+          show={this.state.modalShow}
+          loadingInfo={this.state.esiStatus}
+          loadingIndex={this.state.esiContractIndex}
+          loadingTotal={this.state.esiContractTotal}
+        />
         <ButtonToolbar>
           <ToggleButtonGroup name='type' toggle defaultValue={this.state.type}>
             <ToggleButton type="radio" value='item_exchange' name="radio" onClick={() => this.setState( {type:'item_exchange'} )}>Exchange</ToggleButton>
