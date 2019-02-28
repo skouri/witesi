@@ -87,4 +87,8 @@ class Contract extends Component {
   }
 }
 
+Contract.defaultProps = {
+  searchText: ''
+}
+
 export default Contract;
