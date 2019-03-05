@@ -11,10 +11,9 @@ class App extends Component {
   constructor() {
     super();
     this.state = { 
-      contracts: [],
       regions: [],
       type: 'auction',
-      modalShow: true,
+      modalShow: false,
       esiStatus: '',
       esiContractIndex: 0,
       esiContractTotal: 0,
@@ -44,18 +43,28 @@ class App extends Component {
     // Having tried this, it was a very bad idea. This amount of data is something you would want to
     // pre-load and cache heavily.
     // Using 10000001 which is the "Derelik" region. Less data, but useful for testing app.
-    let contracts = await ESI.getAllContractInfo(10000001, 1 /* TODO */, this.setEsiStatus);
+    if (ESI.contracts.length === 0) {
+      this.setState({ 
+        modalShow: true,
+      });
 
-    this.setState({ 
-      regions: tempRegions,
-      contracts: contracts,
-      type: 'auction', 
-      modalShow: false,
-      esiStatus: '',
-      esiContractIndex: 0,
-      esiContractTotal: contracts.length,
-      searchText: ''
-    });
+      ESI.contracts = await ESI.getAllContractInfo(10000001, 1 /* TODO */, this.setEsiStatus);
+
+      this.setState({ 
+        regions: tempRegions,
+        type: 'auction', 
+        modalShow: false,
+        esiStatus: '',
+        esiContractIndex: 0,
+        esiContractTotal: ESI.contracts.length,
+        searchText: ''
+      });
+    }
+    else {
+      this.setState({ 
+        modalShow: false,
+      });
+    }
   }
 
   render() {
@@ -83,7 +92,7 @@ class App extends Component {
             </Col>
           </Row>
         </Container>
-        <ContractList /* TODO */ page='1' searchText={this.state.searchText} contracts={this.state.contracts} type={this.state.type}></ContractList>
+        <ContractList /* TODO */ page='1' searchText={this.state.searchText} contracts={ESI.contracts} type={this.state.type}></ContractList>
       </div>
     );
   }

@@ -1,4 +1,6 @@
 class ESI {
+    static contracts = [];
+
     static async getAllContractInfo(regionId, page, setEsiStatus) {
         let index = 0;
         setEsiStatus('Retrieving contract list.', index, 0);

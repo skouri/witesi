@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import './Contract.css';
+import { Link } from 'react-router-dom';
 
 class Contract extends Component {
   render() {
@@ -10,16 +11,18 @@ class Contract extends Component {
     
     if (this.props.contract.info.startSystem.name.toLowerCase().includes(this.props.searchText.toLowerCase()) ||
         this.props.contract.info.endSystem.name.toLowerCase().includes(this.props.searchText.toLowerCase())) {
-
+      const contractPath = `/contract/${this.props.contract.contract_id}`;
+      const characterPath = `/character/${this.props.contract.issuer_id}`;
+  
       if (this.props.type === 'item_exchange' && this.props.contract.type === 'item_exchange') {
           return (
             <tr>
-              <td>{this.props.contract.info.items.length > 1 ? '[Multiple Items]' : this.props.contract.info.firstItem.name }</td>
+              <td><Link to={contractPath}>{this.props.contract.info.items.length > 1 ? '[Multiple Items]' : this.props.contract.info.firstItem.name }</Link></td>
               <td>{this.props.contract.info.endSystem.name}</td>
               <td>{this.wordify(this.props.contract.price)}</td>
               {/* TODO <td>Jumps TBD</td> */}
               <td>{ timeLeft }</td>
-              <td>{this.props.contract.info.issuer.name}</td>
+              <td><Link to={characterPath}>{this.props.contract.info.issuer.name}</Link></td>
               <td>{this.props.contract.date_issued}</td>
               <td>{this.props.contract.title}</td>
             </tr>
@@ -27,18 +30,20 @@ class Contract extends Component {
       }
       else if (this.props.type === 'auction' && this.props.contract.type === 'auction') {
         return (
-          <tr>
-            <td>{this.props.contract.info.items.length > 1 ? '[Multiple Items]' : this.props.contract.info.firstItem.name }</td>
-            <td>{this.props.contract.info.endSystem.name}</td>
-            <td>{this.wordify(this.props.contract.price)}</td>
-            <td>{this.wordify(this.props.contract.buyout)}</td>
-            <td>{this.props.contract.info.bids.length}</td>
-            {/* TODO <td>Jumps TBD</td> */}
-            <td>{ timeLeft }</td>
-            <td>{this.props.contract.info.issuer.name}</td>
-            <td>{this.props.contract.date_issued}</td>
-            <td>{this.props.contract.title}</td>
-          </tr>
+          
+            <tr>
+              <td><Link to={contractPath}>{this.props.contract.info.items.length > 1 ? '[Multiple Items]' : this.props.contract.info.firstItem.name }</Link></td>
+              <td>{this.props.contract.info.endSystem.name}</td>
+              <td>{this.wordify(this.props.contract.price)}</td>
+              <td>{this.wordify(this.props.contract.buyout)}</td>
+              <td>{this.props.contract.info.bids.length}</td>
+              {/* TODO <td>Jumps TBD</td> */}
+              <td>{ timeLeft }</td>
+              <td><Link to={characterPath}>{this.props.contract.info.issuer.name}</Link></td>
+              <td>{this.props.contract.date_issued}</td>
+              <td>{this.props.contract.title}</td>
+            </tr>
+          
         );
       }
       else if (this.props.type === 'courier' && this.props.contract.type === 'courier') {
@@ -52,7 +57,7 @@ class Contract extends Component {
             <td>{this.props.contract.info.jumps.length}</td>
             {/* TODO <td>Jumps TBD</td> */}
             <td>{ timeLeft }</td>
-            <td>{this.props.contract.info.issuer.name}</td>
+            <td><Link to={characterPath}>{this.props.contract.info.issuer.name}</Link></td>
             <td>{this.props.contract.date_issued}</td>
             <td>{this.props.contract.title}</td>
           </tr>

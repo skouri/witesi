@@ -38,6 +38,9 @@ class ContractList extends Component {
           return this.state.sortOrder * a.info.issuer.name.localeCompare(b.info.issuer.name);
         });
         break;
+      default:
+        // However the server returns the data to us.
+        break;
     }
     sortedContracts.forEach( (contract, index) => {
         contracts.push( 
