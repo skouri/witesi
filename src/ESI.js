@@ -28,7 +28,7 @@ class ESI {
             if (contract.type === 'item_exchange' || contract.type === 'auction') {
                 setEsiStatus(`Retrieving items for contract ${contract.contract_id}`, index, contracts.length);
                 contract.info.items = await ESI.getContractItemList(contract.contract_id, 1 /* TODO */);
-                if (contract.info.items.length > 0) {
+                if (contract.info.items !== undefined && contract.info.items.length > 0) {
                     contract.info.firstItem = await ESI.getType(contract.info.items[0].type_id);
                 }
             }
@@ -231,6 +231,67 @@ class ESI {
             console.log(error);
         }
     }
+
+    // This route expires daily at 11:05
+    static async getAncestries() {
+        try {
+            const response = await cachedFetch(`https://esi.evetech.net/latest/universe/ancestries/?datasource=tranquility&language=en-us`);
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+    
+            return response.json();
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
+    // This route expires daily at 11:05
+    static async getBloodlines() {
+        try {
+            const response = await cachedFetch(`https://esi.evetech.net/latest/universe/bloodlines/?datasource=tranquility&language=en-us`);
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+    
+            return response.json();
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+    
+    // This route expires daily at 11:05
+    static async getRaces() {
+        try {
+            const response = await cachedFetch(`https://esi.evetech.net/latest/universe/races/?datasource=tranquility&language=en-us`);
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+    
+            return response.json();
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
+    // This route expires daily at 11:05
+    static async getPortraits(characterId) {
+        try {
+            const response = await cachedFetch(`https://esi.evetech.net/latest/characters/${characterId}/portrait/?datasource=tranquility`);
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+    
+            return response.json();
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+    
 }
 
 // cachedFetch taken from https://www.sitepoint.com/cache-fetched-ajax-requests/

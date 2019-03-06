@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 class ContractDetail extends Component {
   render() {
       return (
-        <span>Hello, World!</span>
+        <div>Contract ID: {this.props.match.params.id}</div>
       );
   }
 }

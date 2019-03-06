@@ -11,7 +11,6 @@ class App extends Component {
   constructor() {
     super();
     this.state = { 
-      regions: [],
       type: 'auction',
       modalShow: false,
       esiStatus: '',
@@ -30,14 +29,6 @@ class App extends Component {
   }
 
   async componentDidMount() {
-    let regions = await ESI.getRegionList();
-
-    let tempRegions = [];
-    for (const regionId of regions) {
-      let region = await ESI.getRegion(regionId);
-      tempRegions.push(region);
-    };
-
     // Note: 10000002 is the "Forge" region which contains the "Jita" star system.
     // This is where the majority of trade occurs, and thus will likely return the most data.
     // Having tried this, it was a very bad idea. This amount of data is something you would want to
@@ -51,7 +42,6 @@ class App extends Component {
       ESI.contracts = await ESI.getAllContractInfo(10000001, 1 /* TODO */, this.setEsiStatus);
 
       this.setState({ 
-        regions: tempRegions,
         type: 'auction', 
         modalShow: false,
         esiStatus: '',
