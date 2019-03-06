@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import ESI from '../ESI';
+import { Image, Table, Jumbotron } from 'react-bootstrap';
+import './CharacterDetail.css';
 
 class CharacterDetail extends Component {
   constructor() {
@@ -37,20 +39,43 @@ class CharacterDetail extends Component {
   render() {
       return (
         <div>
-          <img alt='' src={this.state.portraits.px256x256}></img>
-          <div>Character ID: {this.props.match.params.id}</div>
-          <div>Name: { this.state.character.name }</div>
-          <div>Gender: { this.state.character.gender }</div>
-          <div>Birthday: { this.state.character.birthday }</div>
-          <div>Security Status: { this.state.character.security_status }</div>
-          <div>Corporation Name: { this.state.corporation.name }</div>
-          <div>Race: { this.state.race.name } </div>
-          <div>Race Description: { this.state.race.description } </div>
-          <div>Bloodline: { this.state.bloodline.name } </div>
-          <div>Bloodline Description: { this.state.bloodline.description } </div>
-          <div>Ancestry: { this.state.ancestry.name } </div>
-          <div>Ancestry Short Description: { this.state.ancestry.short_description } </div>
-          <div>Ancestry Description: { this.state.ancestry.description } </div>
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Gender</th>
+                <th>Birthdate</th>
+                <th>Security Status</th>
+                <th>Corporation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{ this.state.character.name }</td>
+                <td>{ this.state.character.gender }</td>
+                <td>{ this.state.character.birthday }</td>
+                <td>{ this.state.character.security_status }</td>
+                <td>{ this.state.corporation.name }</td>
+              </tr>
+            </tbody>
+          </Table>
+
+          <Table striped bordered hover>
+            <tbody>
+              <tr>
+                <td><Image src={this.state.portraits.px256x256} /></td>
+                <td>
+                  <Jumbotron id='my_jumbotron'>
+                    <h4>{ this.state.race.name }</h4>
+                    <p>{ this.state.race.description }</p>
+                    <p>{ this.state.bloodline.description }</p>
+                    <h4>{ this.state.ancestry.name }</h4>
+                    <p>{ this.state.ancestry.description }</p>
+                  </Jumbotron>
+                </td>
+              </tr>
+            </tbody>
+          </Table>
         </div>
       );
   }
