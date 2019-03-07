@@ -3,6 +3,7 @@ import { storiesOf } from '@storybook/react';
 import { Table } from 'react-bootstrap';
 import Contract from '../src/components/Contract';
 import Search from '../src/components/Search';
+import Item from '../src/components/Item';
 import { MemoryRouter } from 'react-router-dom';
 
 storiesOf('Contract', module)
@@ -39,6 +40,17 @@ storiesOf('Contract', module)
             </Table>
         )
     })
+    .add('Item', () => {
+        let item = {"is_included":true,"item_id":1020536045155,"quantity":34,"record_id":2853841676,"type_id":12557,"info":{"type":{"capacity":0,"description":"The Gleam overdrive crystal has tremendous damage capacity but needs substantially more energy than normal. The delicate crystalline structures used in the manufacture of this advanced crystal degrade with use, eventually causing it to shatter.\r\n\r\n75% reduced optimal range.\r\n25% increased tracking speed.\r\n\r\nNote: This ammunition can only be used by small tech level II Beam Lasers.","dogma_attributes":[{"attribute_id":128,"value":1},{"attribute_id":4,"value":1},{"attribute_id":9,"value":1},{"attribute_id":779,"value":0.25},{"attribute_id":783,"value":0.1},{"attribute_id":784,"value":0.01},{"attribute_id":786,"value":1},{"attribute_id":277,"value":1},{"attribute_id":161,"value":1},{"attribute_id":162,"value":0},{"attribute_id":38,"value":0},{"attribute_id":182,"value":11083},{"attribute_id":137,"value":53},{"attribute_id":244,"value":1.25},{"attribute_id":613,"value":0},{"attribute_id":612,"value":0},{"attribute_id":422,"value":2},{"attribute_id":114,"value":7},{"attribute_id":116,"value":0},{"attribute_id":117,"value":0},{"attribute_id":118,"value":7},{"attribute_id":120,"value":0.25},{"attribute_id":633,"value":5},{"attribute_id":124,"value":2833864}],"dogma_effects":[{"effect_id":596,"is_default":false},{"effect_id":599,"is_default":false},{"effect_id":600,"is_default":false},{"effect_id":1173,"is_default":false}],"graphic_id":1131,"group_id":374,"icon_id":1131,"market_group_id":868,"mass":1,"name":"Gleam S","packaged_volume":1,"portion_size":4,"published":true,"radius":1,"type_id":12557,"volume":1}}}
+        return (
+            <Table striped bordered hover>
+                <tbody>
+                    <Item key={1} item={item} />
+                </tbody>
+            </Table>
+        )
+    })
+    // 
 
     storiesOf('Misc', module)
         .add('Search', () => {
