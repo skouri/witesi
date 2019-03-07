@@ -11,13 +11,13 @@ class Contract extends Component {
     
     if (this.props.contract.info.startSystem.name.toLowerCase().includes(this.props.searchText.toLowerCase()) ||
         this.props.contract.info.endSystem.name.toLowerCase().includes(this.props.searchText.toLowerCase())) {
-      const contractPath = `/contract/${this.props.contract.contract_id}`;
+      const itemsPath = `/contract/${this.props.contract.contract_id}/items`;
       const characterPath = `/character/${this.props.contract.issuer_id}`;
   
       if (this.props.type === 'item_exchange' && this.props.contract.type === 'item_exchange') {
           return (
             <tr>
-              <td><Link to={contractPath}>{this.props.contract.info.items.length > 1 ? '[Multiple Items]' : this.props.contract.info.firstItem.name }</Link></td>
+              <td><Link to={itemsPath}>{this.props.contract.info.items.length > 1 ? '[Multiple Items]' : this.props.contract.info.firstItem.name }</Link></td>
               <td>{this.props.contract.info.endSystem.name}</td>
               <td>{this.wordify(this.props.contract.price)}</td>
               {/* TODO <td>Jumps TBD</td> */}
@@ -32,7 +32,7 @@ class Contract extends Component {
         return (
           
             <tr>
-              <td><Link to={contractPath}>{this.props.contract.info.items.length > 1 ? '[Multiple Items]' : this.props.contract.info.firstItem.name }</Link></td>
+              <td><Link to={itemsPath}>{this.props.contract.info.items.length > 1 ? '[Multiple Items]' : this.props.contract.info.firstItem.name }</Link></td>
               <td>{this.props.contract.info.endSystem.name}</td>
               <td>{this.wordify(this.props.contract.price)}</td>
               <td>{this.wordify(this.props.contract.buyout)}</td>

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 import './index.css';
 import App from './App';
-import ContractDetail from './components/ContractDetail';
+import ItemsList from './components/ItemsList';
 import CharacterDetail from './components/CharacterDetail';
 import * as serviceWorker from './serviceWorker';
 
@@ -12,7 +12,7 @@ class Router extends Component {
         return ( 
             <BrowserRouter>
                 <Switch>
-                    <Route path='/contract/:id' component={ ContractDetail } />
+                    <Route path='/contract/:id/items' component={ ItemsList } />
                     <Route path='/character/:id' component={ CharacterDetail } />
                     <Route exact path='/' component={ App } />
                     <Redirect from='*' to='/' />
