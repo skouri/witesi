@@ -190,7 +190,8 @@ class ESI {
     // This route expires daily at 11:05
     static async getType(typeId) {
         try {
-            const response = await cachedFetch(`https://esi.evetech.net/latest/universe/types/${typeId}/?datasource=tranquility&language=en-us`);
+            // Don't attempt to cache every type. Just too much data for Chrome's localStorage.
+            const response = await fetch(`https://esi.evetech.net/latest/universe/types/${typeId}/?datasource=tranquility&language=en-us`);
             if (!response.ok) {
                 throw Error(response.statusText);
             }
@@ -337,8 +338,13 @@ const cachedFetch = (url, options) => {
           // consumed by the time it's returned. This
           // way we're being un-intrusive.
           response.clone().text().then(content => {
-            localStorage.setItem(cacheKey, content)
-            localStorage.setItem(cacheKey+':ts', Date.now())
+            try {
+                localStorage.setItem(cacheKey, content)
+                localStorage.setItem(cacheKey+':ts', Date.now())
+            }
+            catch (e) {
+                console.log("Local Storage is full, Please empty data");
+            }
           })
         }
       }
