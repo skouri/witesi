@@ -273,7 +273,6 @@ The screen displaying publicly available character information.
 ![][character_screen]
 
 ## Routing.
-. . . . List each route supported and state the associated view . . . . . 
 
 + / - displays main screen showing different contract types and their listings.
 + /contract/:contract_id/items - item view of a particular contract (:contract_id)
