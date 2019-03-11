@@ -176,7 +176,6 @@ class ESI {
                 throw Error(response.statusText);
             }
             if (response.status === 204) {
-                console.log(contractId);
                 return [];
             }
             else 
