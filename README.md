@@ -1,23 +1,63 @@
-# witesi
-Holds code for my Waterford Institute of Technology app which uses the Eve Swagger Interface.
+# Assignment 1 - ReactJS app.
 
-The Eve Swagger Interface is defined here:
-https://esi.evetech.net/ui/
+Name: ... your name ...
 
-* Stories are using extracted data as contracts may disappear from Eve Online.
-* It takes a long time to load data. For now, I don't load every individual item in a contract.
-* Sorting can only be performed on "Time Left" and "Issuer" field as of now.
+## Overview.
+...... A statement of the app concept and objectives (just a few lines) ........
 
-TODO
-* Allow for region change (although choosing wrong region makes things super slow).
-* Speed up things. ;)
-* Handle HTML in the values returned from ESI.
-* Handle paging (Forge region has 25 pages of contracts).
-** Problem 1: API call returns all types. I filter them into three groups.
-** Problem 2: Nothing to say how many total pages there are. So, keep retrieving until get an empty set.
-* Handle citadel's as locations.
-* Caching is limited to browser's cache size. Implement my own? Don't cache?
-* How to search for item name in list of contracts if we don't load all the items initially?
-* Sort on more fields.
-* Add sorting arrows for ascending / descending.
-* Remember contract type when navigating back from a route.
+
+ . . . . . List of user features (excluding user registration and authentication) . . . . 
+ 
+ + Feature 1
+ + Feature 2
+ + Feature 3
+ + etc
+ + etc
+
+## Installation requirements.
+
+. . . . Briefly state (to a third party) the installation steps necessary to run your app.
+
+## Data Model Design.
+
+Diagram of app's data model (see example below) AND/OR a sample of the test data used (JSON or equivalent).
+
+![][model]
+
+## App Component Design.
+
+A screenshot showing the component stories from Storybook  
+
+![][stories]
+
+. . . . Explain any non-standard stories, if necessary . . . . . 
+
+## UI Design.
+
+. . . . . Screenshots of app's views (see example below) with appropriate captions (user regeneration and login views, if implemented, can be omitted) . . . . . . . 
+
+![][image3]
+
+## Routing.
+. . . . List each route supported and state the associated view . . . . . 
+
++ /foos - displays all published foos
++ /foos/:id - detail view of a particular foo (:id)
++ etc
++ etc
+
+Specify which, if any, of the above routes are protected (require login)
+
+## Extra features
+
+. . . . . Briefly explain any non-standard features, functional or non-functional, developed for the app. This would include user registeration and authentication, improved re-rendering policies, etc . . . . . .  
+
+## Independent learning.
+
+. . . . . State the non-standard aspects of React (or other related technologies) that you researched and applied in this assignment . . . . .  
+
+
+
+[model]: ./data.jpg
+[image3]: ./screen.png
+[stories]: ./storybook.png
