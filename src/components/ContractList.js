@@ -54,6 +54,7 @@ class ContractList extends Component {
       headers = 
         <thead>
           <tr>
+            <th>ID</th>
             <th>Contract</th>
             <th>Location</th>
             <th>Price</th>
@@ -68,6 +69,7 @@ class ContractList extends Component {
       headers = 
         <thead>
           <tr>
+            <th>ID</th>
             <th>Contract</th>
             <th>Location</th>
             <th>Price</th>
@@ -84,6 +86,7 @@ class ContractList extends Component {
       headers = 
         <thead>
           <tr>
+            <th>ID</th>
             <th>Pick Up</th>
             <th>Drop Off</th>
             <th>Volume</th>
