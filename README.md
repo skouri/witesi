@@ -9,10 +9,15 @@ https://esi.evetech.net/ui/
 * Sorting can only be performed on "Time Left" and "Issuer" field as of now.
 
 TODO
+* Allow for region change (although choosing wrong region makes things super slow).
+* Speed up things. ;)
 * Handle HTML in the values returned from ESI.
-* Handle paging.
+* Handle paging (Forge region has 25 pages of contracts).
+** Problem 1: API call returns all types. I filter them into three groups.
+** Problem 2: Nothing to say how many total pages there are. So, keep retrieving until get an empty set.
 * Handle citadel's as locations.
 * Caching is limited to browser's cache size. Implement my own? Don't cache?
 * How to search for item name in list of contracts if we don't load all the items initially?
 * Sort on more fields.
 * Add sorting arrows for ascending / descending.
+* Remember contract type when navigating back from a route.
