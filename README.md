@@ -301,7 +301,7 @@ interesting as mentioned above. And obviously, I had to figure out the Eve Swagg
 the "moment" library for some date manipulation. Also, I found some code snippets on StackOverflow and
 other areas that I tried my best to reference in code comments.
 
-
+App has been deployed to Surge at http://witesi.surge.sh.
 
 
 
