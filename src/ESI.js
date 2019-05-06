@@ -138,6 +138,28 @@ class ESI {
         }
     }
 
+        // This route is cached for up to 3600 seconds
+        static async searchCharacter(characterName) {
+            try {
+                let options = {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: '[ "' + characterName + '" ]'
+                };
+                const response = await fetch(`https://esi.evetech.net/latest/universe/ids/?datasource=tranquility&language=en-us`,options);
+                if (!response.ok) {
+                    throw Error(response.statusText);
+                }
+        
+                return response.json();
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
+
     // This route is cached for up to 3600 seconds
     static async getCorporation(corporationId) {
         try {
