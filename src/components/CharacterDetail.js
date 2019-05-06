@@ -12,7 +12,9 @@ class CharacterDetail extends Component {
       bloodline: {},
       ancestry: {},
       corporation: {},
-      portraits: {}
+      portraits: {},
+      metaData: {},
+      locations: [ { date_issued: '', info: { end_location_name: '' } }]
     };
   }
 
@@ -33,10 +35,31 @@ class CharacterDetail extends Component {
       });
     let corporation = await ESI.getCorporation(character.corporation_id);
     let portraits = await ESI.getPortraits(characterId);
-    this.setState({ character, race, bloodline, ancestry, corporation, portraits });
+
+    let metaData = await ESI.getCharacterMetaData(characterId);
+    if (metaData === undefined) {
+      metaData = {
+        alts: 'Unknown',
+        last_seen_location: 'Unknown',
+        bounty: '0',
+        ship_types: 'Unknown'
+      }
+    }
+
+    let locations = await ESI.getCharacterLocations(characterId);
+
+    this.setState({ character, race, bloodline, ancestry, corporation, portraits, metaData, locations });
   }
 
   render() {
+    let locations = this.state.locations.map(
+      (location,index) =>  
+        <tr key={index}>
+          <td>{ location.date_issued }</td>
+          <td>{ location.info.end_location_name }</td>
+        </tr>
+      )
+
       return (
         <div>
           <Table striped bordered hover>
@@ -47,6 +70,10 @@ class CharacterDetail extends Component {
                 <th>Birthdate</th>
                 <th>Security Status</th>
                 <th>Corporation</th>
+                <th>Alts</th>
+                <th>Last Seen</th>
+                <th>Bounty</th>
+                <th>Ship Types</th>
               </tr>
             </thead>
             <tbody>
@@ -56,9 +83,26 @@ class CharacterDetail extends Component {
                 <td>{ this.state.character.birthday }</td>
                 <td>{ this.state.character.security_status }</td>
                 <td>{ this.state.corporation.name }</td>
+                <td>{ this.state.metaData.alts }</td>
+                <td>{ this.state.metaData.last_seen_location }</td>
+                <td>{ this.state.metaData.bounty }</td>
+                <td>{ this.state.metaData.ship_types }</td>
               </tr>
             </tbody>
           </Table>
+
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Location</th>
+              </tr>
+            </thead>
+            <tbody>
+              { locations }
+            </tbody>
+          </Table>
+
 
           <Table striped bordered hover>
             <tbody>
