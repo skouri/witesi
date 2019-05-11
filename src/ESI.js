@@ -152,6 +152,27 @@ class ESI {
         }
     }
 
+    static async saveCharacterMetaData(characterId, formData) {
+        try {
+            const response = await fetch(`/api/character/${characterId}`,
+                { 
+                    method: 'PUT', 
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(formData)
+                });
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+    
+            return response.json();
+        }
+        catch (error) {
+            // console.log(error);
+        }
+    }
+
     static async getCharacterLocations(characterId) {
         try {
             const response = await fetch(`/api/location/${characterId}`);
