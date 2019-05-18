@@ -1,19 +1,25 @@
 import React, { Component } from 'react';
 import ESI from '../ESI';
-import { Image, Table, Jumbotron } from 'react-bootstrap';
+import { Image, Table, Jumbotron, Button, Form } from 'react-bootstrap';
 import './CharacterDetail.css';
 
 class CharacterDetail extends Component {
   constructor() {
     super();
     this.state = { 
+      characterId: {},
       character: {},
       race: {},
       bloodline: {},
       ancestry: {},
       corporation: {},
-      portraits: {}
+      portraits: {},
+      metaData: { alts: 'Unknown', last_seen_location: 'Unknown', bounty: 0, ship_types: 'Unknown' },
+      locations: [ { date_issued: '', info: { end_location_name: '' } }]
     };
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   async componentDidMount() {
@@ -33,32 +39,89 @@ class CharacterDetail extends Component {
       });
     let corporation = await ESI.getCorporation(character.corporation_id);
     let portraits = await ESI.getPortraits(characterId);
-    this.setState({ character, race, bloodline, ancestry, corporation, portraits });
+
+    let metaData = await ESI.getCharacterMetaData(characterId);
+    if (metaData === undefined) {
+      metaData = {
+        alts: 'Unknown',
+        last_seen_location: 'Unknown',
+        bounty: '0',
+        ship_types: 'Unknown'
+      }
+    }
+
+    let locations = await ESI.getCharacterLocations(characterId);
+
+    this.setState({ characterId, character, race, bloodline, ancestry, corporation, portraits, metaData, locations });
+  }
+
+  handleChange(event) {
+    var key = event.target.id;
+    var val = event.target.value;
+    var obj  = this.state.metaData;
+    obj[key] = val;
+    this.setState({ metaData: obj });
+  }
+
+  async handleSubmit(event) {
+    event.preventDefault();
+    await ESI.saveCharacterMetaData(this.state.characterId, this.state.metaData);
   }
 
   render() {
+    let locations = this.state.locations.map(
+      (location,index) =>  
+        <tr key={index}>
+          <td>{ location.date_issued }</td>
+          <td>{ location.info.end_location_name }</td>
+        </tr>
+      )
+
       return (
         <div>
+          <Form onSubmit={ this.handleSubmit }>
+            <Table striped bordered hover>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Gender</th>
+                  <th>Birthdate</th>
+                  <th>Security Status</th>
+                  <th>Corporation</th>
+                  <th>Alts</th>
+                  <th>Last Seen</th>
+                  <th>Bounty</th>
+                  <th>Ship Types</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{ this.state.character.name }</td>
+                  <td>{ this.state.character.gender }</td>
+                  <td>{ this.state.character.birthday }</td>
+                  <td>{ this.state.character.security_status }</td>
+                  <td>{ this.state.corporation.name }</td>
+                  <td><Form.Control id='alts' type='text' value={ this.state.metaData.alts } onChange={ this.handleChange }></Form.Control></td>
+                  <td><Form.Control id='last_seen_location' type='text' value={ this.state.metaData.last_seen_location } onChange={ this.handleChange }></Form.Control></td>
+                  <td><Form.Control id='bounty' type='text' value={ this.state.metaData.bounty } onChange={ this.handleChange }></Form.Control></td>
+                  <td><Form.Control id='ship_types' type='text' value={ this.state.metaData.ship_types } onChange={ this.handleChange }></Form.Control></td>
+                </tr>
+              </tbody>
+            </Table>
+            <Button id="submit_button" type="submit">Submit form</Button>
+          </Form>
           <Table striped bordered hover>
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Gender</th>
-                <th>Birthdate</th>
-                <th>Security Status</th>
-                <th>Corporation</th>
+                <th>Date</th>
+                <th>Location</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>{ this.state.character.name }</td>
-                <td>{ this.state.character.gender }</td>
-                <td>{ this.state.character.birthday }</td>
-                <td>{ this.state.character.security_status }</td>
-                <td>{ this.state.corporation.name }</td>
-              </tr>
+              { locations }
             </tbody>
           </Table>
+
 
           <Table striped bordered hover>
             <tbody>

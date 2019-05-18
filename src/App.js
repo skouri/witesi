@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import ContractList from './components/ContractList';
 import { Container, Row, Col } from 'react-bootstrap';
+import { Redirect } from 'react-router-dom';
 import { ButtonToolbar, ToggleButton, ToggleButtonGroup } from 'react-bootstrap';
 import ESI from './ESI';
 import Loading from './components/Loading';
 import Search from './components/Search';
+import CharacterSearch from './components/CharacterSearch';
 import './App.css';
 
 class App extends Component {
@@ -16,7 +18,8 @@ class App extends Component {
       esiStatus: '',
       esiContractIndex: 0,
       esiContractTotal: 0,
-      searchText: ''
+      searchText: '',
+      characterId: ''
     };
   }
 
@@ -26,6 +29,17 @@ class App extends Component {
 
   handleSearch = (text) => { 
     this.setState( { searchText: text } );
+  }
+
+  handleCharacterSearch = async (text) => {
+    let response = await ESI.searchCharacter(text);
+    if (response.characters !== undefined && response.characters.length === 1) {
+      let id = response.characters[0].id;
+      this.setState( { characterId: id } );
+    }
+    else {
+      // TODO Popup saying not found.
+    }
   }
 
   async componentDidMount() {
@@ -58,6 +72,11 @@ class App extends Component {
   }
 
   render() {
+    if (this.state.characterId !== undefined && this.state.characterId !== '') {
+      let redirectTo = '/character/' + this.state.characterId;
+      return <Redirect push to={ redirectTo } />
+    }
+
     return (
       <div className="App">
         <Loading
@@ -76,6 +95,9 @@ class App extends Component {
                   <ToggleButton type="radio" value='courier' name="radio" onClick={() => this.setState( {type: 'courier'} )}>Courier</ToggleButton>
                 </ToggleButtonGroup>
               </ButtonToolbar>
+            </Col>
+            <Col>
+              <CharacterSearch handleCharacterSearch={ this.handleCharacterSearch }></CharacterSearch>
             </Col>
             <Col>
               <Search handleSearch={ this.handleSearch }></Search>

@@ -31,5 +31,6 @@
     "@babel/core": "^7.3.3",
     "@storybook/react": "^4.1.12",
     "babel-loader": "^8.0.5"
-  }
+  },
+  "proxy": "http://localhost:8080"
 }
